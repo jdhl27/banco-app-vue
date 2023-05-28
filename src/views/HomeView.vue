@@ -3,6 +3,13 @@ import Footer from "../components/Footer.vue";
 </script>
 <template>
   <div class="container">
+    <div class="bg-2 home-hero-bg">
+      <img
+        src="https://uploads-ssl.webflow.com/631027b7f762367743783642/631b77b8fdd77e1329832e8e_631027b7f762368f1e78369d_shape-bg-home-hero-finance-x-template%201.svg"
+        alt="svg cool"
+        class="bg-2 home-hero-bg-shape"
+      />
+    </div>
     <div class="row">
       <div class="col-md-6">
         <div class="my-5">
@@ -37,7 +44,11 @@ import Footer from "../components/Footer.vue";
         </div>
       </div>
       <div class="col-md-6 d-flex justify-content-center">
-        <img src="src/assets/iphone-auth.png" alt="Imagen atractiva" />
+        <img
+          style="width: 100%"
+          src="src/assets/hero.png"
+          alt="Imagen atractiva"
+        />
       </div>
     </div>
   </div>
@@ -47,7 +58,6 @@ import Footer from "../components/Footer.vue";
 <style scoped>
 /* Estilos para la primera columna */
 .col-md-6:nth-child(1) {
-  background-color: #fff;
   padding: 30px;
 }
 
@@ -75,5 +85,20 @@ import Footer from "../components/Footer.vue";
 .col-md-6:nth-child(1) a.btn-primary:hover {
   background-color: #000;
   border-color: #000;
+}
+.bg-2.home-hero-bg {
+  z-index: -1;
+  min-height: 1183px;
+  color: rgba(20, 30, 50, 0.47);
+  top: 0%;
+  bottom: auto;
+  left: 0%;
+  right: 0%;
+  overflow: hidden;
+  position: absolute;
+}
+
+.bg-2.home-hero-bg-shape {
+  max-width: 67%;
 }
 </style>
