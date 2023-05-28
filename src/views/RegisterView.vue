@@ -20,11 +20,41 @@
             <input type="text" id="cedula" v-model="cedula" required />
           </div>
           <div class="form-group">
+            <label for="genero">Género</label>
+            <select id="genero" v-model="genero" required>
+              <option value="">Seleccione un género</option>
+              <option value="masculino">Masculino</option>
+              <option value="femenino">Femenino</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="estadoCivil">Estado Civil</label>
+            <select id="estadoCivil" v-model="estadoCivil" required>
+              <option value="">Seleccione una opción</option>
+              <option value="soltero">Soltero/a</option>
+              <option value="soltero">Unión Libre</option>
+              <option value="casado">Casado/a</option>
+              <option value="divorciado">Divorciado/a</option>
+              <option value="viudo">Viudo/a</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label for="direccion">Dirección de residencia</label>
             <input type="text" id="direccion" v-model="direccion" required />
           </div>
         </div>
+
         <div class="col-md-6">
+          <div class="form-group">
+            <label for="nacionalidad">Nacionalidad</label>
+            <input
+              type="text"
+              id="nacionalidad"
+              v-model="nacionalidad"
+              required
+            />
+          </div>
           <div class="form-group">
             <label for="ciudad">Ciudad</label>
             <select id="ciudad" v-model="ciudad" required>
@@ -34,6 +64,18 @@
               <option value="Cali">Cali</option>
               <option value="Barranquilla">Barranquilla</option>
               <option value="Cartagena">Cartagena</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="estadoLaboral">Estado Laboral</label>
+            <select id="estadoLaboral" v-model="estadoLaboral" required>
+              <option value="">Seleccione una opción</option>
+              <option value="empleado">Empleado/a</option>
+              <option value="independiente">Independiente</option>
+              <option value="desempleado">Desempleado/a</option>
+              <option value="estudiante">Estudiante</option>
+              <option value="jubilado">Jubilado/a</option>
+              <option value="otro">Otro</option>
             </select>
           </div>
           <div class="form-group">
@@ -65,8 +107,12 @@ const usuariosS = useUserStore();
 const nombre = ref("");
 const apellido = ref("");
 const cedula = ref("");
+const genero = ref("");
+const estadoCivil = ref("");
 const direccion = ref("");
+const nacionalidad = ref("");
 const ciudad = ref("");
+const estadoLaboral = ref("");
 const telefono = ref("");
 const correo = ref("");
 const password = ref("");
@@ -76,8 +122,12 @@ const handleSubmit = async () => {
     nombre: nombre.value,
     apellido: apellido.value,
     cedula: cedula.value,
+    genero: genero.value,
+    estadoCivil: estadoCivil.value,
     direccion: direccion.value,
+    nacionalidad: nacionalidad.value,
     ciudad: ciudad.value,
+    estadoLaboral: estadoLaboral.value,
     telefono: telefono.value,
     correo: correo.value,
     password: password.value,
