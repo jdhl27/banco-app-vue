@@ -1,7 +1,13 @@
-<!-- <script setup>
-import { RouterLink, RouterView } from "vue-router";
-</script> -->
+<script setup>
+import { ref } from "vue";
+import { useUserStore } from "@/store/userFire.js";
 
+const usuariosS = useUserStore();
+
+const logout = async () => {
+  await usuariosS.logoutUser();
+};
+</script>
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
@@ -17,20 +23,23 @@ import { RouterLink, RouterView } from "vue-router";
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div
-        v-if="$route.path === '/'"
-        class="collapse navbar-collapse"
-        id="navbarNav"
-      >
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <!-- <li class="nav-item">
-            <router-link class="nav-link" to="/cuentas">Cuentas</router-link>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul v-if="usuariosS.user?.id" class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <router-link class="nav-link" to="/transactions"
+              >Transacciones</router-link
+            >
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/prestamos"
-              >Préstamos</router-link
-            >
-          </li> -->
+            <router-link class="nav-link" to="/account">Cuenta</router-link>
+          </li>
+          <li class="nav-item">
+            <button type="button" @click="logout" class="btn btn-danger">
+              Cerrar sesión
+            </button>
+          </li>
+        </ul>
+        <ul v-else class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <router-link
               style="margin-right: 12px"
@@ -49,12 +58,6 @@ import { RouterLink, RouterView } from "vue-router";
     </div>
   </nav>
 </template>
-
-<script>
-export default {
-  name: "Navbar",
-};
-</script>
 
 <style scoped>
 nav {
