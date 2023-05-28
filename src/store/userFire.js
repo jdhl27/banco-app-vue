@@ -83,5 +83,18 @@ export const useUserStore = defineStore("userStore", {
         Notify("Los datos no coinciden", "error");
       }
     },
+
+    logoutUser() {
+      this.isLoading = true;
+      signOut(auth)
+        .then(() => {
+          this.user = {};
+          this.isLoading = false;
+          router.push("/");
+        })
+        .catch((error) => {
+          this.isLoading = false;
+        });
+    },
   },
 });
