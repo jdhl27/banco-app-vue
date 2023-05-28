@@ -4,6 +4,27 @@ import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import AccountView from "../views/AccountView.vue";
 import TransactionsView from "../views/TransactionsView.vue";
+import { useUserStore } from "@/store/userFire.js";
+
+const requireAuth = async (to, from, next) => {
+  const usuariosS = useUserStore();
+  const user = await usuariosS.currentUser();
+  if (user?.id) {
+    next();
+  } else {
+    next("/login");
+  }
+};
+
+const isLoggedOutGuard = (to, from, next) => {
+  const usuariosS = useUserStore();
+  const user = usuariosS.currentUser(); // Obtener el estado del usuario
+  if (user) {
+    router.go(-1);
+  } else {
+    next();
+  }
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,33 +38,25 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginView,
-      meta: {
-        hiddenFooter: true,
-      },
+      beforeEnter: isLoggedOutGuard,
     },
     {
       path: "/register",
       name: "register",
       component: RegisterView,
-      meta: {
-        hiddenFooter: true,
-      },
+      beforeEnter: isLoggedOutGuard,
     },
     {
       path: "/account",
       name: "account",
       component: AccountView,
-      meta: {
-        hiddenFooter: true,
-      },
+      beforeEnter: requireAuth,
     },
     {
       path: "/transactions",
       name: "transactions",
       component: TransactionsView,
-      meta: {
-        hiddenFooter: true,
-      },
+      beforeEnter: requireAuth,
     },
   ],
 });
