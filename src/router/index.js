@@ -16,9 +16,9 @@ const requireAuth = async (to, from, next) => {
   }
 };
 
-const isLoggedOutGuard = (to, from, next) => {
+const isLoggedOutGuard = async (to, from, next) => {
   const usuariosS = useUserStore();
-  const user = usuariosS.currentUser(); // Obtener el estado del usuario
+  const user = await usuariosS.currentUser(); // Obtener el estado del usuario
   if (user) {
     router.go(-1);
   } else {
