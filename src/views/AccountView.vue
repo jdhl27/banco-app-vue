@@ -1,10 +1,14 @@
-<script>
-import Footer from "../components/Footer.vue";
+<script setup>
+import { useUserStore } from "@/store/userFire.js";
+
+const usuariosS = useUserStore();
+const userData = usuariosS.user;
 </script>
+
 <template>
   <div class="user-info-container">
     <div class="user-info-header">
-      <h1>Bienvenido, {{ name }}</h1>
+      <h1>Bienvenido, {{ userData.nombre }}</h1>
     </div>
     <div class="user-info-body">
       <div class="row">
@@ -14,10 +18,10 @@ import Footer from "../components/Footer.vue";
               <h3 class="card-title">Información Personal</h3>
             </div>
             <div class="card-body">
-              <p><strong>Nombre:</strong> {{ name }}</p>
-              <p><strong>Correo Electrónico:</strong> {{ email }}</p>
-              <p><strong>Teléfono:</strong> {{ phone }}</p>
-              <p><strong>Dirección:</strong> {{ address }}</p>
+              <p><strong>Nombre:</strong> {{ userData.nombre }}</p>
+              <p><strong>Correo Electrónico:</strong> {{ userData.correo }}</p>
+              <p><strong>Teléfono:</strong> {{ userData.telefono }}</p>
+              <p><strong>Dirección:</strong> {{ userData.direccion }}</p>
             </div>
           </div>
         </div>
@@ -27,9 +31,10 @@ import Footer from "../components/Footer.vue";
               <h3 class="card-title">Información Financiera</h3>
             </div>
             <div class="card-body">
-              <p><strong>Cuenta Bancaria:</strong> {{ bankAccount }}</p>
-              <p><strong>Tarjeta de Crédito:</strong> {{ creditCard }}</p>
-              <p><strong>Saldo:</strong> ${{ balance }}</p>
+              <p>
+                <strong>Cuenta Bancaria:</strong> {{ userData.cuentaBancaria }}
+              </p>
+              <p><strong>Saldo:</strong> ${{ userData.saldo }}</p>
             </div>
           </div>
           <router-link
@@ -42,20 +47,7 @@ import Footer from "../components/Footer.vue";
       </div>
     </div>
   </div>
-  <!-- <Footer /> -->
 </template>
-
-<script setup>
-import { ref } from "vue";
-
-const name = "Juan Pérez";
-const email = "juan.perez@mail.com";
-const phone = "+52 55 1234 5678";
-const address = "Calle Falsa 123, Col. Centro, CDMX";
-const bankAccount = "1234-5678-9012-3456";
-const creditCard = "**** **** **** 1234";
-const balance = 10000;
-</script>
 
 <style scoped>
 .user-info-container {
