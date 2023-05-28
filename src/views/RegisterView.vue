@@ -9,25 +9,25 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" v-model="nombre" />
+            <input type="text" id="nombre" v-model="nombre" required />
           </div>
           <div class="form-group">
             <label for="apellido">Apellido</label>
-            <input type="text" id="apellido" v-model="apellido" />
+            <input type="text" id="apellido" v-model="apellido" required />
           </div>
           <div class="form-group">
             <label for="cedula">Cédula de ciudadanía</label>
-            <input type="text" id="cedula" v-model="cedula" />
+            <input type="text" id="cedula" v-model="cedula" required />
           </div>
           <div class="form-group">
             <label for="direccion">Dirección de residencia</label>
-            <input type="text" id="direccion" v-model="direccion" />
+            <input type="text" id="direccion" v-model="direccion" required />
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
             <label for="ciudad">Ciudad</label>
-            <select id="ciudad" v-model="ciudad">
+            <select id="ciudad" v-model="ciudad" required>
               <option value="">Seleccione una ciudad</option>
               <option value="Bogotá">Bogotá</option>
               <option value="Medellín">Medellín</option>
@@ -38,15 +38,15 @@
           </div>
           <div class="form-group">
             <label for="telefono">Teléfono</label>
-            <input type="text" id="telefono" v-model="telefono" />
+            <input type="text" id="telefono" v-model="telefono" required />
           </div>
           <div class="form-group">
             <label for="correo">Correo electrónico</label>
-            <input type="email" id="correo" v-model="correo" />
+            <input type="email" id="correo" v-model="correo" required />
           </div>
           <div class="form-group">
             <label for="password">Contraseña</label>
-            <input type="password" id="password" v-model="password" />
+            <input type="password" id="password" v-model="password" required />
           </div>
         </div>
       </div>
@@ -58,11 +58,12 @@
 
 <script setup>
 import { ref } from "vue";
-import { userStore } from "@/store/users.js";
+import { useUserStore } from "@/store/userFire.js";
 
-const usuariosS = userStore();
+const usuariosS = useUserStore();
 
 const nombre = ref("");
+const apellido = ref("");
 const cedula = ref("");
 const direccion = ref("");
 const ciudad = ref("");
@@ -70,9 +71,18 @@ const telefono = ref("");
 const correo = ref("");
 const password = ref("");
 
-const handleSubmit = () => {
-  const nombreCompleto = nombre.value + " " + apellido.value;
-  usuariosS.registrarUsuario(nombreCompleto);
+const handleSubmit = async () => {
+  const userData = {
+    nombre: nombre.value,
+    apellido: apellido.value,
+    cedula: cedula.value,
+    direccion: direccion.value,
+    ciudad: ciudad.value,
+    telefono: telefono.value,
+    correo: correo.value,
+    password: password.value,
+  };
+  await usuariosS.registerUser(userData);
 };
 </script>
 
