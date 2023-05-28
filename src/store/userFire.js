@@ -1,4 +1,15 @@
 import { defineStore } from "pinia";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { auth, db } from "../firebaseconfig.js";
+import router from "../router/index.js";
+import { signOut } from "firebase/auth";
+import { Notify } from "../notify.js";
+
 export const useUserStore = defineStore("userStore", {
   state: () => ({
     user: {},
