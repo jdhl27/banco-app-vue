@@ -96,5 +96,42 @@ export const useUserStore = defineStore("userStore", {
           this.isLoading = false;
         });
     },
+
+    currentUser() {
+      this.isLoading = true;
+      return new Promise((resolve, reject) => {
+        onAuthStateChanged(
+          auth,
+          async (userState) => {
+            if (userState) {
+              const userId = userState.uid;
+              const docRef = query(
+                collection(db, "users"),
+                where("id", "==", userId)
+              );
+              const docSnap = await getDocs(docRef);
+              if (!docSnap.empty) {
+                docSnap.forEach((doc) => {
+                  this.user = doc.data();
+                });
+                resolve(this.user);
+              } else {
+                Notify("Vuelva a iniciar sesión", "info");
+                this.user = {};
+                resolve(null);
+              }
+            } else {
+              this.user = {};
+              resolve(null);
+            }
+            this.isLoading = false;
+          },
+          (e) => {
+            this.isLoading = false;
+            reject(e);
+          }
+        );
+      });
+    },
   },
 });
