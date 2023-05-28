@@ -9,12 +9,72 @@
         <label for="correo">Correo electrónico</label>
         <input type="email" id="correo" v-model="correo" required />
       </div>
-      <div class="form-group">
+      <div class="form-group" style="display: flex; flex-direction: column">
         <label for="password">Contraseña</label>
         <input type="password" id="password" v-model="password" required />
+        <a
+          class="forgot-password-link"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+          >Olvidé contraseña</a
+        >
       </div>
       <button type="submit">Iniciar sesión</button>
+
+      <router-link class="btn mt-5" to="/register"
+        >Quiero registrarme</router-link
+      >
     </form>
+
+    <!-- Olvidé contraseña modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Olvidé contraseña</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="forgotEmail">Correo electrónico</label>
+              <input
+                type="email"
+                id="forgotEmail"
+                v-model="forgotEmail"
+                required
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="sendPasswordReset"
+            >
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -26,6 +86,7 @@ const usuariosS = useUserStore();
 
 const correo = ref("");
 const password = ref("");
+const forgotEmail = ref(null);
 
 const handleSubmit = async () => {
   const userData = {
@@ -33,6 +94,18 @@ const handleSubmit = async () => {
     password: password.value,
   };
   await usuariosS.loginUser(userData);
+};
+
+const sendPasswordReset = async () => {
+  if (forgotEmail.value) {
+    const response = await usuariosS.forgotPassword(forgotEmail.value);
+    if (response) {
+      forgotEmail.value = null;
+      const modal = document.getElementById("exampleModal");
+      const bootstrapModal = bootstrap.Modal.getInstance(modal);
+      bootstrapModal.hide();
+    }
+  }
 };
 </script>
 
