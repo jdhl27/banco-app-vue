@@ -25,5 +25,63 @@ export const useUserStore = defineStore("userStore", {
       }
       return cardNumber;
     },
+
+    async registerUser(userState) {
+      this.isLoading = true;
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          userState.correo,
+          userState.password
+        );
+        delete userState.password;
+        const uniqueCardNumber = generateUniqueCardNumber();
+
+        const docRef = await addDoc(collection(db, "users"), {
+          id: userCredential.user.uid,
+          cuentaBancaria: uniqueCardNumber,
+          saldo: 100,
+          ...userState,
+        });
+        Notify("Registro exitoso", "success");
+        router.push("/login");
+
+        this.isLoading = false;
+      } catch (error) {
+        Notify(
+          "En este momento presentamos fallas en el servicio, discúlpanos",
+          "error"
+        );
+        this.isLoading = false;
+      }
+    },
+
+    async loginUser(userState) {
+      this.isLoading = true;
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          userState.correo,
+          userState.password
+        );
+        const userId = userCredential.user.uid;
+        const docRef = query(
+          collection(db, "users"),
+          where("id", "==", userId)
+        );
+        const docSnap = await getDocs(docRef);
+        if (!docSnap.empty) {
+          docSnap.forEach((doc) => {
+            this.user = doc.data();
+            router.push("/account");
+          });
+        }
+        this.isLoading = false;
+      } catch (error) {
+        console.log(error.message);
+        this.isLoading = false;
+        Notify("Los datos no coinciden", "error");
+      }
+    },
   },
 });
