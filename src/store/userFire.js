@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
@@ -26,6 +27,23 @@ export const useUserStore = defineStore("userStore", {
       return cardNumber;
     },
 
+    async forgotPassword(email) {
+      return new Promise((resolve, reject) => {
+        sendPasswordResetEmail(auth, email)
+          .then((res) => {
+            Notify(
+              "Se envió un correo para restablecer la contraseña",
+              "success"
+            );
+            resolve(true);
+          })
+          .catch(() => {
+            Notify("El correo electrónico no está registrado", "error");
+            resolve(false);
+          });
+      });
+    },
+
     async registerUser(userState) {
       this.isLoading = true;
       try {
@@ -35,7 +53,7 @@ export const useUserStore = defineStore("userStore", {
           userState.password
         );
         delete userState.password;
-        const uniqueCardNumber = generateUniqueCardNumber();
+        const uniqueCardNumber = this.generateUniqueCardNumber();
 
         const docRef = await addDoc(collection(db, "users"), {
           id: userCredential.user.uid,
@@ -116,7 +134,6 @@ export const useUserStore = defineStore("userStore", {
                 });
                 resolve(this.user);
               } else {
-                Notify("Vuelva a iniciar sesión", "info");
                 this.user = {};
                 resolve(null);
               }
