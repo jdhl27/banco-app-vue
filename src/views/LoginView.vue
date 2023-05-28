@@ -20,9 +20,20 @@
 
 <script setup>
 import { ref } from "vue";
+import { useUserStore } from "@/store/userFire.js";
 
-const correo = "";
-const password = "";
+const usuariosS = useUserStore();
+
+const correo = ref("");
+const password = ref("");
+
+const handleSubmit = async () => {
+  const userData = {
+    correo: correo.value,
+    password: password.value,
+  };
+  await usuariosS.loginUser(userData);
+};
 </script>
 
 <style scoped>
