@@ -143,7 +143,7 @@ const handleSubmit = async () => {
   padding: 2rem;
   border-radius: 10px;
   background-color: #fff;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #9e9eaf40;
 }
 
 .register-header {
@@ -157,6 +157,11 @@ h1 {
   color: #1a1a1a;
 }
 
+p {
+  font-size: 1rem;
+  color: #0e1523;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -167,43 +172,60 @@ form {
 }
 
 label {
-  font-weight: 400;
+  font-weight: 600;
   display: block;
+  color: #141e32;
 }
 
 input,
 select {
-  padding: 0.5rem;
+  padding: 0.8rem;
   border-radius: 5px;
   border: none;
   background-color: #f2f2f2;
   font-size: 1rem;
   margin-top: 0.5rem;
   width: 100%;
+  color: #1a1a1a;
 }
 
 select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 10'%3E%3Cpolygon points='0,0 30,0 15,10'/%3E%3C/svg%3E");
-  background-position: right center;
-  background-repeat: no-repeat;
-  background-size: 10px 10px;
   padding-right: 1.5rem;
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  background-size: 11px 18px;
 }
 
 button[type="submit"] {
-  background-color: #0066cc;
+  background-color: #141e32;
   color: #fff;
   border: none;
   border-radius: 5px;
   padding: 1rem;
   font-size: 1rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
 
 button[type="submit"]:hover {
-  background-color: #004499;
+  background-color: #0e1523;
+}
+
+.btn-primary {
+  background-color: #141e32;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #0e1523;
 }
 </style>
