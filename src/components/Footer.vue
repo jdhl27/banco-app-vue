@@ -1,72 +1,71 @@
 <template>
   <footer class="footer bg-dark">
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
-        <div class="col-lg-4 col-md-6">
-          <h5 class="text-white mb-3">Información de Contacto</h5>
-          <p class="text-muted">1234 Calle del Banco</p>
-          <p class="text-muted">Ciudad, Estado, Código Postal</p>
-          <p class="text-muted">Teléfono: (123) 456-7890</p>
-          <p class="text-muted">Correo Electrónico: info@mibanco.com</p>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <h5 class="text-white mb-3">Redes Sociales</h5>
-          <ul class="list-unstyled">
-            <li>
-              <a href="#"><i class="bi bi-facebook"></i> Facebook</a>
-            </li>
-            <li>
-              <a href="#"><i class="bi bi-twitter"></i> Twitter</a>
-            </li>
-            <li>
-              <a href="#"><i class="bi bi-instagram"></i> Instagram</a>
-            </li>
-            <li>
-              <a href="#"><i class="bi bi-linkedin"></i> LinkedIn</a>
-            </li>
+        <div class="col-lg-4 d-flex align-items-center">
+          <ul class="footer-news-list">
+            <img
+              style="
+                width: 43%;
+                background-color: #fff;
+                padding: 5px;
+                border-radius: 24px;
+              "
+              src="src/assets/davicaspa_logo.png"
+              alt="Imagen atractiva"
+            />
           </ul>
         </div>
-        <div class="col-lg-4">
-          <h5 class="text-white mb-3">Noticias Recientes</h5>
-          <ul class="list-unstyled">
+        <div class="col-lg-4 col-md-6">
+          <h5 class="footer-heading">Información de Contacto</h5>
+          <p class="footer-text">Avenida 33 #45-45</p>
+          <p class="footer-text">Medellín, Antioquia, Colombia</p>
+          <p class="footer-text">Teléfono: (604) 456-7890</p>
+          <p class="footer-text">Correo Electrónico: info@davicaspa.com</p>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <h5 class="footer-heading">Redes Sociales</h5>
+          <ul class="footer-social-list">
             <li>
-              <a href="#" class="text-muted">Tasas de Interés en Aumento</a>
+              <a href="#" class="footer-social-link">
+                <i class="bi bi-facebook"></i> Facebook
+              </a>
             </li>
             <li>
-              <a href="#" class="text-muted"
-                >Nueva Sucursal Abierta en Ciudad X</a
-              >
+              <a href="#" class="footer-social-link">
+                <i class="bi bi-twitter"></i> Twitter
+              </a>
             </li>
             <li>
-              <a href="#" class="text-muted"
-                >Promoción Especial de Tarjeta de Crédito</a
-              >
+              <a href="#" class="footer-social-link">
+                <i class="bi bi-instagram"></i> Instagram
+              </a>
             </li>
             <li>
-              <a href="#" class="text-muted"
-                >Consejos de Ahorro y Finanzas Personales</a
-              >
+              <a href="#" class="footer-social-link">
+                <i class="bi bi-linkedin"></i> LinkedIn
+              </a>
             </li>
           </ul>
         </div>
       </div>
-      <hr />
+      <hr class="footer-hr" />
       <div class="row">
         <div class="col-md-6">
-          <p class="text-muted">
-            &copy; {{ currentYear }} Mi Banco. Todos los derechos reservados.
+          <p class="footer-text">
+            &copy; {{ currentYear }} Davicaspa. Todos los derechos reservados.
           </p>
         </div>
         <div class="col-md-6 text-md-end">
-          <ul class="list-inline">
-            <li class="list-inline-item">
-              <a href="#" class="text-muted">Términos y Condiciones</a>
+          <ul class="footer-legal-list">
+            <li class="footer-legal-item">
+              <a href="#" class="footer-legal-link">Términos y Condiciones</a>
             </li>
-            <li class="list-inline-item">
-              <a href="#" class="text-muted">Política de Privacidad</a>
+            <li class="footer-legal-item">
+              <a href="#" class="footer-legal-link">Política de Privacidad</a>
             </li>
-            <li class="list-inline-item">
-              <a href="#" class="text-muted">Aviso Legal</a>
+            <li class="footer-legal-item">
+              <a href="#" class="footer-legal-link">Aviso Legal</a>
             </li>
           </ul>
         </div>
@@ -87,49 +86,81 @@ export default {
 </script>
 
 <style scoped>
+i {
+  margin: 14px;
+}
 .footer {
   color: #fff;
-  padding: 40px 0;
+  padding: 100px 0 25px 0;
   margin-top: 65px;
 }
 
-.footer a {
-  color: #fff;
-}
-
-.footer hr {
-  border-top-color: rgba(255, 255, 255, 0.1);
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-
-.footer h5 {
+.footer-heading {
   color: #fff;
   font-weight: 600;
   margin-bottom: 15px;
   text-transform: uppercase;
 }
 
-.footer p {
+.footer-text {
   font-size: 14px;
   line-height: 26px;
+  color: #6b7079;
 }
 
-.footer ul li {
+.footer-social-list {
+  padding-left: 0;
+  list-style: none;
+}
+.footer-social-list li {
+  margin: 17px 0;
+}
+
+.footer-social-link {
+  color: #fff;
+  margin-right: 10px;
+  text-decoration: none;
+}
+
+.footer-social-link:hover {
+  color: #0066cc;
+}
+
+.footer-news-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.footer-news-link {
+  color: #fff;
   margin-bottom: 10px;
+  text-decoration: none;
 }
 
-.footer ul li:last-child {
-  margin-bottom: 0;
+.footer-news-link:hover {
+  color: #0066cc;
 }
 
-.footer ul.list-inline li {
+.footer-hr {
+  border-top-color: rgba(255, 255, 255, 0.1);
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.footer-legal-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.footer-legal-item {
   display: inline-block;
   margin-right: 10px;
 }
 
-.footer ul.list-unstyled {
-  padding-left: 0;
-  list-style: none;
+.footer-legal-link {
+  color: #fff;
+}
+.footer-legal-link:hover {
+  color: gray;
 }
 </style>
