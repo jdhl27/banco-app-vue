@@ -111,12 +111,12 @@ const sendPasswordReset = async () => {
 
 <style scoped>
 .login-container {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 400px;
+  margin: 80px auto;
   padding: 2rem;
   border-radius: 10px;
   background-color: #fff;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #9e9eaf40;
 }
 
 .login-header {
@@ -127,7 +127,12 @@ const sendPasswordReset = async () => {
 h1 {
   font-size: 2rem;
   margin-bottom: 0.5rem;
-  color: #1a1a1a;
+  color: #141e32;
+}
+
+p {
+  font-size: 1rem;
+  color: #0e1523;
 }
 
 form {
@@ -136,16 +141,17 @@ form {
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 label {
-  font-weight: 400;
+  font-weight: 600;
   display: block;
+  color: #141e32;
 }
 
 input {
-  padding: 0.5rem;
+  padding: 0.8rem;
   border-radius: 5px;
   border: none;
   background-color: #f2f2f2;
@@ -155,18 +161,90 @@ input {
 }
 
 button[type="submit"] {
-  background-color: #0066cc;
+  background-color: #141e32;
   color: #fff;
   border: none;
   border-radius: 5px;
   padding: 1rem;
   font-size: 1rem;
-  margin-top: 1rem;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
 
 button[type="submit"]:hover {
-  background-color: #004499;
+  background-color: #0e1523;
+}
+
+a {
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+  color: #004499;
+}
+
+.modal-title {
+  color: #141e32;
+}
+
+.forgot-password-link {
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease-in-out;
+  cursor: pointer;
+  margin-top: 7px;
+  text-align: end;
+}
+
+.forgot-password-link:hover {
+  color: #004499;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  color: #141e32;
+}
+
+.modal-footer {
+  padding: 1.5rem 2rem;
+  background-color: #f2f2f2;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.btn-secondary {
+  background-color: #f2f2f2;
+  color: #141e32;
+  border: none;
+  border-radius: 5px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-secondary:hover {
+  background-color: #e6e6e6;
+}
+
+.btn-primary {
+  background-color: #141e32;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #0e1523;
 }
 </style>
