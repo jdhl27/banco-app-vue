@@ -212,7 +212,7 @@ a:hover {
 }
 
 .modal-footer {
-  padding: 1.5rem 2rem;
+  padding: 11px;
   background-color: #f2f2f2;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;

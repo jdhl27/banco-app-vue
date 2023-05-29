@@ -48,13 +48,31 @@ const logout = async () => {
         </ul>
         <ul v-else class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" v-scroll-to="'#information'">Información</a>
+            <a
+              class="nav-link"
+              v-if="$route.path === '/'"
+              v-scroll-to="'#information'"
+              >Información</a
+            >
+            <a class="nav-link" v-else :href="'/#information'">Información</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" v-scroll-to="'#benefits'">Beneficios</a>
+            <a
+              class="nav-link"
+              v-if="$route.path === '/'"
+              v-scroll-to="'#benefits'"
+              >Beneficios</a
+            >
+            <a class="nav-link" v-else :href="'/#benefits'">Beneficios</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" v-scroll-to="'#contact'">Contacto</a>
+            <a
+              class="nav-link"
+              v-if="$route.path === '/'"
+              v-scroll-to="'#contact'"
+              >Contacto</a
+            >
+            <a class="nav-link" v-else :href="'/#contact'">Contacto</a>
           </li>
           <li
             class="nav-item"
