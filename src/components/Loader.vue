@@ -30,7 +30,7 @@ const isLoading = computed(() => loaderStore.isLoading);
   width: 50px;
   height: 50px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
+  border-top: 4px solid #0e1523;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
