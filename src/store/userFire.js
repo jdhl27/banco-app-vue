@@ -132,6 +132,28 @@ export const useUserStore = defineStore("userStore", {
                 docSnap.forEach((doc) => {
                   this.user = doc.data();
                 });
+
+                const cuentaDestinoQuery = query(
+                  collection(db, "transactions"),
+                  where("cuentaDestino", "==", this.user.cuentaBancaria)
+                );
+
+                const cuentaRemitenteQuery = query(
+                  collection(db, "transactions"),
+                  where("cuentaRemitente", "==", this.user.cuentaBancaria)
+                );
+
+                const cuentaDestinoSnap = await getDocs(cuentaDestinoQuery);
+                const cuentaRemitenteSnap = await getDocs(cuentaRemitenteQuery);
+
+                const mergedResults = [
+                  ...cuentaDestinoSnap.docs,
+                  ...cuentaRemitenteSnap.docs,
+                ];
+
+                this.user.transactions = mergedResults.map((doc) => {
+                  return doc.data();
+                });
                 resolve(this.user);
               } else {
                 this.user = {};
@@ -150,7 +172,6 @@ export const useUserStore = defineStore("userStore", {
         );
       });
     },
-
     async registerTransaction(transactionData) {
       this.isLoading = true;
       return new Promise((resolve, reject) => {

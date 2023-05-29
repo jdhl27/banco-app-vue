@@ -156,7 +156,6 @@ const handleSubmit = () => {
 };
 
 const sentTransaction = async () => {
-  onShowConfirmation(); // false
   const dataTrasaction = {
     numeroCuenta: numeroCuenta.value,
     tipo: tipo.value,
@@ -168,6 +167,7 @@ const sentTransaction = async () => {
     tipo.value = null;
     cantidad.value = null;
   }
+  onShowConfirmation(); // false
 };
 </script>
 
