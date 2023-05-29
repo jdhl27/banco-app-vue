@@ -18,10 +18,10 @@ export const useUserStore = defineStore("userStore", {
   }),
 
   actions: {
-    generateUniqueCardNumber() {
+    generateUniqueCardNumber(num) {
       let cardNumber = "";
       for (let i = 0; i < 11; i++) {
-        const digit = Math.floor(Math.random() * 10); // Generar un dígito aleatorio del 0 al 9
+        const digit = Math.floor(Math.random() * num); // Generar un dígito aleatorio del 0 al 9
         cardNumber += digit.toString();
       }
       return cardNumber;
@@ -53,7 +53,7 @@ export const useUserStore = defineStore("userStore", {
           userState.password
         );
         delete userState.password;
-        const uniqueCardNumber = this.generateUniqueCardNumber();
+        const uniqueCardNumber = this.generateUniqueCardNumber(10);
 
         const docRef = await addDoc(collection(db, "users"), {
           id: userCredential.user.uid,
@@ -148,6 +148,35 @@ export const useUserStore = defineStore("userStore", {
             reject(e);
           }
         );
+      });
+    },
+
+    async registerTransaction(transactionData) {
+      this.isLoading = true;
+      return new Promise((resolve, reject) => {
+        const trasaccionNum = this.generateUniqueCardNumber(6);
+        addDoc(collection(db, "transactions"), {
+          id: trasaccionNum,
+          fecha: new Date(),
+          cuentaDestino: transactionData.numeroCuenta,
+          tipo: transactionData.tipo,
+          cantidad: transactionData.cantidad,
+          cuentaRemitente: this.user.cuentaBancaria,
+        })
+          .then((res) => {
+            resolve(true);
+            Notify("Trasacción realizada con éxito", "success");
+          })
+          .catch((e) => {
+            console.log(e);
+            Notify(
+              "En este momento presentamos fallas en el servicio, discúlpanos",
+              "error"
+            );
+            resolve(false);
+          });
+
+        this.isLoading = false;
       });
     },
   },

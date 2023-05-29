@@ -121,9 +121,6 @@ h1 {
   color: #141f31;
 }
 
-.card {
-}
-
 .card-header {
   background-color: #141f31;
   color: #fff;

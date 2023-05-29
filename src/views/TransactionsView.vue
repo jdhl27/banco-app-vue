@@ -89,6 +89,9 @@ import { ref } from "vue";
 import { Notify } from "../notify.js";
 import DetailTrasaction from "../components/DetailTrasaction.vue";
 import ConfirmationTrasaction from "../components/ConfirmationTrasaction.vue";
+import { useUserStore } from "@/store/userFire.js";
+
+const usuariosS = useUserStore();
 
 const transactions = ref([
   {
@@ -152,12 +155,19 @@ const handleSubmit = () => {
   }
 };
 
-const sentTransaction = () => {
+const sentTransaction = async () => {
   onShowConfirmation(); // false
-  numeroCuenta.value = null;
-  tipo.value = null;
-  cantidad.value = null;
-  Notify("Trasacción realizada con éxito", "success");
+  const dataTrasaction = {
+    numeroCuenta: numeroCuenta.value,
+    tipo: tipo.value,
+    cantidad: cantidad.value,
+  };
+  const res = await usuariosS.registerTransaction(dataTrasaction);
+  if (res) {
+    numeroCuenta.value = null;
+    tipo.value = null;
+    cantidad.value = null;
+  }
 };
 </script>
 
