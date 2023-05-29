@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import { useUserStore } from "@/store/userFire.js";
 
 const usuariosS = useUserStore();
@@ -49,19 +48,13 @@ const logout = async () => {
         </ul>
         <ul v-else class="navbar-nav ms-auto">
           <li class="nav-item">
-            <router-link class="nav-link" to="/transactions"
-              >Información</router-link
-            >
+            <a class="nav-link" v-scroll-to="'#information'">Información</a>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/transactions"
-              >Descuentos</router-link
-            >
+            <a class="nav-link" v-scroll-to="'#benefits'">Beneficios</a>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/transactions"
-              >Contacto</router-link
-            >
+            <a class="nav-link" v-scroll-to="'#contact'">Contacto</a>
           </li>
           <li
             class="nav-item"
@@ -97,6 +90,7 @@ nav {
   font-size: 1.1rem;
   margin-left: 1rem;
   color: rgba(14, 21, 35, 0.61);
+  cursor: pointer;
 }
 
 .navbar-nav .nav-link:hover {
