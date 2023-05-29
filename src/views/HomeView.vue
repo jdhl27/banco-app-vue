@@ -1,5 +1,9 @@
 <script setup>
-import Footer from "../components/Footer.vue";
+import Information from "../components/Information.vue";
+import Benefits from "../components/Benefits.vue";
+import { useUserStore } from "@/store/userFire.js";
+
+const usuariosS = useUserStore();
 </script>
 <template>
   <div class="container">
@@ -24,10 +28,11 @@ import Footer from "../components/Footer.vue";
           <p>¡Comenzá a ahorrar hoy mismo con nuestro banco!</p>
           <router-link
             class="btn btn-primary btn-lg"
-            to="/account"
+            :to="usuariosS.user?.id ? '/account' : '/login'"
             role="button"
-            >Abrir cuenta</router-link
           >
+            {{ usuariosS.user?.id ? "Ver cuenta" : "Abrir cuenta" }}
+          </router-link>
         </div>
       </div>
       <div class="col-md-6 d-flex justify-content-center">
@@ -40,7 +45,8 @@ import Footer from "../components/Footer.vue";
       </div>
     </div>
   </div>
-  <!-- <Footer /> -->
+  <Information />
+  <Benefits />
 </template>
 
 <style scoped>
