@@ -15,7 +15,9 @@ p,
 span,
 label,
 input,
-button {
+button,
+button[type="submit"],
+select {
   font-family: "DM Sans", sans-serif !important;
   font-weight: 400 !important;
 }
