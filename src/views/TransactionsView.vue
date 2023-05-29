@@ -1,9 +1,6 @@
-<script setup>
-import Footer from "../components/Footer.vue";
-</script>
 <template>
-  <div class="row">
-    <div class="col-md-6">
+  <div class="row d-flex justify-content-center" style="max-width: 100%">
+    <div class="col-md-5">
       <div class="transaction-container">
         <div class="transaction-header">
           <h1>Nueva Transacción</h1>
@@ -11,43 +8,54 @@ import Footer from "../components/Footer.vue";
         </div>
         <form class="transaction-form" @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label for="nombre">Nombre de usuario</label>
-            <input type="text" id="nombre" v-model="nombre" required />
+            <label for="numeroCuenta">Número de cuenta</label>
+            <input
+              type="text"
+              id="numeroCuenta"
+              v-model="numeroCuenta"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="tipo">Tipo de cuenta</label>
+            <select id="tipo" v-model="tipo" required>
+              <option value="">Seleccione un tipo</option>
+              <option value="Ahorros">Ahorros</option>
+              <option value="Corriente">Corriente</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="cantidad">Cantidad</label>
             <input type="number" id="cantidad" v-model="cantidad" required />
           </div>
-          <div class="form-group">
-            <label for="tipo">Tipo de transacción</label>
-            <select id="tipo" v-model="tipo" required>
-              <option value="">Seleccione un tipo</option>
-              <option value="Compra">Compra</option>
-              <option value="Venta">Venta</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="fecha">Fecha</label>
-            <input type="date" id="fecha" v-model="fecha" required />
-          </div>
-          <button type="submit">Enviar transacción</button>
+          <button
+            type="submit"
+            style="padding: 16px 0; background-color: #141f31"
+          >
+            Enviar transacción
+          </button>
         </form>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="transaction-container">
         <h2>Transacciones Bancarias</h2>
         <table class="table">
           <thead>
             <tr>
               <th>Fecha</th>
-              <th>Descripción</th>
+              <th>Cuenta</th>
               <th>Monto</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(transaction, index) in transactions" :key="index">
-              <td>{{ transaction.date }}</td>
+            <tr
+              v-for="(transaction, index) in transactions"
+              @click="onShowDetail(transaction)"
+              :key="index"
+              class="header-table"
+            >
+              <td>{{ transaction?.date }}</td>
               <td>{{ transaction.description }}</td>
               <td
                 :class="{
@@ -63,108 +71,112 @@ import Footer from "../components/Footer.vue";
       </div>
     </div>
   </div>
-  <!-- <Footer /> -->
+  <detail-trasaction
+    v-if="showDetail"
+    :transaction="transactionDetail"
+    :closeModal="onShowDetail"
+  />
+  <ConfirmationTrasaction
+    v-if="showConfirmation"
+    :transaction="transactionConfirmation"
+    :confirmTransaction="sentTransaction"
+    :cancelConfirmation="onShowConfirmation"
+  />
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      transactions: [
-        {
-          date: "2023-05-11",
-          description: "Pago de nómina",
-          amount: 5000.0,
-        },
-        {
-          date: "2023-05-10",
-          description: "Pago de luz",
-          amount: -80.0,
-        },
-        {
-          date: "2023-05-09",
-          description: "Depósito de cliente",
-          amount: 1200.0,
-        },
-      ],
-    };
+<script setup>
+import { ref } from "vue";
+import { Notify } from "../notify.js";
+import DetailTrasaction from "../components/DetailTrasaction.vue";
+import ConfirmationTrasaction from "../components/ConfirmationTrasaction.vue";
+
+const transactions = ref([
+  {
+    numero: "16289283982",
+    date: "2023-05-11",
+    description: "Pago de nómina",
+    amount: 5000.0,
   },
+  {
+    numero: "16289283982",
+    date: "2023-05-10",
+    description: "Pago de luz",
+    amount: -80.0,
+  },
+  {
+    numero: "16289283982",
+    date: "2023-05-09",
+    description: "Depósito de cliente",
+    amount: 1200.0,
+  },
+]);
+
+const showDetail = ref(false);
+const showConfirmation = ref(false);
+const transactionDetail = ref(null);
+const transactionConfirmation = ref(null);
+const numeroCuenta = ref("");
+const cantidad = ref("");
+const tipo = ref("");
+
+const onShowDetail = (transaction) => {
+  showDetail.value = !showDetail.value;
+  if (showDetail.value) {
+    transactionDetail.value = transaction;
+  } else {
+    transactionDetail.value = null;
+  }
+};
+
+const onShowConfirmation = () => {
+  showConfirmation.value = !showConfirmation.value;
+};
+
+const handleSubmit = () => {
+  console.log(numeroCuenta.value);
+  console.log(cantidad.value);
+  console.log(tipo.value);
+  if (
+    numeroCuenta.value.length > 0 &&
+    cantidad.value > 0 &&
+    tipo.value.length > 0
+  ) {
+    transactionConfirmation.value = {
+      cuenta: numeroCuenta.value,
+      description: tipo.value,
+      amount: cantidad.value,
+    };
+    onShowConfirmation(); // true
+  } else {
+    Notify("Rellena los datos");
+  }
+};
+
+const sentTransaction = () => {
+  onShowConfirmation(); // false
+  numeroCuenta.value = null;
+  tipo.value = null;
+  cantidad.value = null;
+  Notify("Trasacción realizada con éxito", "success");
 };
 </script>
 
 <style scoped>
 .transaction-container {
-  max-width: 800px;
+  max-width: 707px;
   margin: 0 auto;
   padding: 2rem;
   border-radius: 10px;
   background-color: #fff;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #8080804d;
 }
 
 h2 {
   font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #1a1a1a;
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 2rem;
-}
-
-.table th,
-.table td {
-  border: 1px solid #dee2e6;
-  padding: 0.75rem;
-  text-align: left;
-  vertical-align: top;
-}
-
-.table thead th {
-  vertical-align: bottom;
-  border-bottom: 2px solid #dee2e6;
-}
-
-.table tbody + tbody {
-  border-top: 2px solid #dee2e6;
-}
-
-.table .table {
-  background-color: #fff;
-}
-
-.table-sm th,
-.table-sm td {
-  padding: 0.3rem;
-}
-
-.table-bordered {
-  border: 1px solid #dee2e6;
-}
-
-.table-bordered th,
-.table-bordered td {
-  border: 1px solid #dee2e6;
-}
-
-.table-bordered thead th,
-.table-bordered thead td {
-  border-bottom-width: 2px;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.table-hover tbody tr:hover {
-  background-color: rgba(0, 0, 0, 0.075);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
+.transaction-form {
+  margin-top: 2rem;
 }
 
 .form-group {
@@ -172,34 +184,56 @@ form {
 }
 
 label {
-  font-weight: 400;
   display: block;
+  margin-bottom: 0.5rem;
 }
 
-input,
+input[type="text"],
+input[type="number"],
 select {
-  padding: 0.5rem;
-  border-radius: 5px;
-  border: none;
-  background-color: #f2f2f2;
-  font-size: 1rem;
-  margin-top: 0.5rem;
   width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button[type="submit"] {
-  background-color: #0066cc;
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 5px;
-  padding: 1rem;
-  font-size: 1rem;
-  margin-top: 1rem;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
 }
 
-button[type="submit"]:hover {
-  background-color: #004499;
+table {
+  width: 100%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+}
+
+.header-table {
+  cursor: pointer;
+}
+
+.header-table:hover {
+  background-color: #6c6c6c30;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.text-success {
+  color: green;
+}
+
+.text-danger {
+  color: red;
 }
 </style>
