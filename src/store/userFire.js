@@ -20,8 +20,8 @@ export const useUserStore = defineStore("userStore", {
   actions: {
     generateUniqueCardNumber(num) {
       let cardNumber = "";
-      for (let i = 0; i < 11; i++) {
-        const digit = Math.floor(Math.random() * num); // Generar un dígito aleatorio del 0 al 9
+      for (let i = 0; i < num; i++) {
+        const digit = Math.floor(Math.random() * 10); // Generar un dígito aleatorio del 0 al 9
         cardNumber += digit.toString();
       }
       return cardNumber;
