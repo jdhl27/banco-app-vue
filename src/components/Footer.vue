@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer bg-dark">
+  <footer id="contact" class="footer bg-dark">
     <div class="container">
       <div class="row">
         <div class="col-lg-4 d-flex align-items-center">
