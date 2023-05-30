@@ -5,7 +5,14 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "../firebaseconfig.js";
 import router from "../router/index.js";
 import { signOut } from "firebase/auth";
@@ -192,30 +199,83 @@ export const useUserStore = defineStore("userStore", {
     },
     async registerTransaction(transactionData) {
       this.isLoading = true;
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         const trasaccionNum = this.generateUniqueCardNumber(6);
-        addDoc(collection(db, "transactions"), {
-          id: trasaccionNum,
-          fecha: new Date(),
-          cuentaDestino: transactionData.numeroCuenta,
-          tipo: transactionData.tipo,
-          cantidad: transactionData.cantidad,
-          cuentaRemitente: this.user.cuentaBancaria,
-        })
-          .then((res) => {
-            resolve(true);
-            Notify("Trasacción realizada con éxito", "success");
-          })
-          .catch((e) => {
-            console.log(e);
-            Notify(
-              "En este momento presentamos fallas en el servicio, discúlpanos",
-              "error"
-            );
-            resolve(false);
+        const docRef = query(
+          collection(db, "users"),
+          where("cuentaBancaria", "==", transactionData?.cuentaDestino)
+        );
+        let userExist = null;
+        const docSnap = await getDocs(docRef);
+
+        // valida si la cuenta existe
+        if (!docSnap.empty) {
+          docSnap.forEach((doc) => {
+            userExist = doc.data();
           });
 
-        this.isLoading = false;
+          // Actualizar saldo del usuario actual
+          let saldoUser = parseInt(this.user?.saldo) || 0;
+          saldoUser -= parseInt(transactionData.cantidad);
+          this.user.saldo = saldoUser;
+
+          // Obtener referencia al documento de usuario actual
+          const docUserRef = query(
+            collection(db, "users"),
+            where("id", "==", this.user?.id)
+          );
+
+          const docUserSnap = await getDocs(docUserRef);
+
+          if (!docUserSnap.empty) {
+            await updateDoc(docUserSnap.docs[0].ref, { saldo: saldoUser });
+
+            // Actualizar saldo del usuario destino
+            let saldoDestino = parseInt(userExist.saldo) || 0;
+            saldoDestino += parseInt(transactionData.cantidad);
+            await updateDoc(docSnap.docs[0].ref, { saldo: saldoDestino });
+
+            await addDoc(collection(db, "transactions"), {
+              id: trasaccionNum,
+              fecha: this.getCurrentDate(),
+              cuentaDestino: transactionData.cuentaDestino,
+              tipo: transactionData.tipo,
+              cantidad: transactionData.cantidad,
+              cuentaRemitente: this.user.cuentaBancaria,
+            })
+              .then((res) => {
+                resolve(true);
+                Notify(
+                  `Transacción realizada con éxito a ${
+                    userExist?.nombre + " " + userExist?.apellido
+                  }`,
+                  "success"
+                );
+                this.isLoading = false;
+              })
+              .catch((e) => {
+                console.log(e);
+                Notify(
+                  "En este momento presentamos fallas en el servicio, discúlpanos",
+                  "error"
+                );
+                resolve(false);
+                this.isLoading = false;
+              });
+          } else {
+            // No se encontró el documento de usuario actual
+            Notify("No se encontró el documento de usuario actual", "error");
+            resolve(false);
+            this.isLoading = false;
+          }
+        } else {
+          Notify(
+            "Revisa la cuenta porque no existe o no está asociada a un usuario",
+            "error"
+          );
+          resolve(false);
+          this.isLoading = false;
+        }
       });
     },
   },
