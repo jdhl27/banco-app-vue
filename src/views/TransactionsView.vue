@@ -8,11 +8,11 @@
         </div>
         <form class="transaction-form" @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label for="numeroCuenta">Número de cuenta</label>
+            <label for="cuentaDestino">Número de cuenta</label>
             <input
               type="text"
-              id="numeroCuenta"
-              v-model="numeroCuenta"
+              id="cuentaDestino"
+              v-model="cuentaDestino"
               required
             />
           </div>
@@ -38,7 +38,10 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="transaction-container">
+      <div
+        class="transaction-container"
+        style="overflow-y: auto; height: 431px"
+      >
         <h2>Transacciones Bancarias</h2>
         <table class="table">
           <thead>
@@ -48,35 +51,48 @@
               <th>Monto</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="usuariosS?.user?.transactions">
             <tr
-              v-for="(transaction, index) in transactions"
+              v-for="(transaction, index) in usuariosS?.user?.transactions"
               @click="onShowDetail(transaction)"
               :key="index"
               class="header-table"
             >
-              <td>{{ transaction?.date }}</td>
-              <td>{{ transaction.description }}</td>
+              <td>{{ transaction?.fecha }}</td>
+              <td>
+                {{
+                  transaction.enviadaPorUsuario
+                    ? transaction.cuentaDestino
+                    : transaction.cuentaRemitente
+                }}
+              </td>
               <td
                 :class="{
-                  'text-success': transaction.amount >= 0,
-                  'text-danger': transaction.amount < 0,
+                  'text-success': !transaction.enviadaPorUsuario,
+                  'text-danger': transaction.enviadaPorUsuario,
                 }"
               >
-                {{ transaction.amount }}
+                {{
+                  transaction.enviadaPorUsuario
+                    ? "-" + transaction.cantidad
+                    : transaction.cantidad
+                }}
               </td>
             </tr>
           </tbody>
+          <div v-else class="loader-overlay">
+            <div class="loader"></div>
+          </div>
         </table>
       </div>
     </div>
   </div>
-  <detail-trasaction
+  <detail-transaction
     v-if="showDetail"
     :transaction="transactionDetail"
     :closeModal="onShowDetail"
   />
-  <ConfirmationTrasaction
+  <ConfirmationTransaction
     v-if="showConfirmation"
     :transaction="transactionConfirmation"
     :confirmTransaction="sentTransaction"
@@ -87,38 +103,17 @@
 <script setup>
 import { ref } from "vue";
 import { Notify } from "../notify.js";
-import DetailTrasaction from "../components/DetailTrasaction.vue";
-import ConfirmationTrasaction from "../components/ConfirmationTrasaction.vue";
+import DetailTransaction from "../components/DetailTransaction.vue";
+import ConfirmationTransaction from "../components/ConfirmationTransaction.vue";
 import { useUserStore } from "@/store/userFire.js";
 
 const usuariosS = useUserStore();
-
-const transactions = ref([
-  {
-    numero: "16289283982",
-    date: "2023-05-11",
-    description: "Pago de nómina",
-    amount: 5000.0,
-  },
-  {
-    numero: "16289283982",
-    date: "2023-05-10",
-    description: "Pago de luz",
-    amount: -80.0,
-  },
-  {
-    numero: "16289283982",
-    date: "2023-05-09",
-    description: "Depósito de cliente",
-    amount: 1200.0,
-  },
-]);
 
 const showDetail = ref(false);
 const showConfirmation = ref(false);
 const transactionDetail = ref(null);
 const transactionConfirmation = ref(null);
-const numeroCuenta = ref("");
+const cuentaDestino = ref("");
 const cantidad = ref("");
 const tipo = ref("");
 
@@ -136,18 +131,28 @@ const onShowConfirmation = () => {
 };
 
 const handleSubmit = () => {
-  console.log(numeroCuenta.value);
-  console.log(cantidad.value);
-  console.log(tipo.value);
+  if (cantidad.value > usuariosS?.user.saldo) {
+    Notify(
+      `Saldo insuficiente, te faltarían $${
+        cantidad.value - usuariosS?.user.saldo
+      } para realizar operación`,
+      "error"
+    );
+    return;
+  }
+  if (cuentaDestino.value === usuariosS?.user?.cuentaBancaria) {
+    Notify("No puedes enviar al mismo producto", "error");
+    return;
+  }
   if (
-    numeroCuenta.value.length > 0 &&
+    cuentaDestino.value.length > 8 &&
     cantidad.value > 0 &&
     tipo.value.length > 0
   ) {
     transactionConfirmation.value = {
-      cuenta: numeroCuenta.value,
-      description: tipo.value,
-      amount: cantidad.value,
+      cuentaDestino: cuentaDestino.value,
+      tipo: tipo.value,
+      cantidad: cantidad.value,
     };
     onShowConfirmation(); // true
   } else {
@@ -156,18 +161,16 @@ const handleSubmit = () => {
 };
 
 const sentTransaction = async () => {
-  const dataTrasaction = {
-    numeroCuenta: numeroCuenta.value,
-    tipo: tipo.value,
-    cantidad: cantidad.value,
-  };
-  const res = await usuariosS.registerTransaction(dataTrasaction);
+  const res = await usuariosS.registerTransaction(
+    transactionConfirmation.value
+  );
   if (res) {
-    numeroCuenta.value = null;
-    tipo.value = null;
+    onShowConfirmation(); // false
+    const user = await usuariosS.currentUser();
+    cuentaDestino.value = null;
+    tipo.value = "";
     cantidad.value = null;
   }
-  onShowConfirmation(); // false
 };
 </script>
 
@@ -245,5 +248,33 @@ td {
 
 .text-danger {
   color: red;
+}
+
+.loader-overlay {
+  position: absolute;
+  width: 466px;
+  height: 283px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #0e1523;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
