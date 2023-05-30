@@ -70,7 +70,7 @@ export const useUserStore = defineStore("userStore", {
           ...userState,
         });
         Notify("Registro exitoso", "success");
-        router.push("/login");
+        router.push("/account");
 
         this.isLoading = false;
       } catch (error) {
@@ -161,6 +161,16 @@ export const useUserStore = defineStore("userStore", {
 
                 this.user.transactions = mergedResults.map((doc) => {
                   return doc.data();
+                });
+
+                this.user.transactions.forEach((transaction) => {
+                  if (
+                    transaction.cuentaRemitente === this.user.cuentaBancaria
+                  ) {
+                    transaction.enviadaPorUsuario = true;
+                  } else {
+                    transaction.enviadaPorUsuario = false;
+                  }
                 });
                 resolve(this.user);
               } else {
