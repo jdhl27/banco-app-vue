@@ -14,23 +14,34 @@
         </div>
         <div class="modal-body">
           <h2>Detalles de la transacción</h2>
-          #{{ transaction.numero }}
+          #{{ transaction?.id }}
           <div class="transaction-details">
             <div class="info-row">
               <strong>Fecha:</strong>
-              <span>{{ transaction.date }}</span>
+              <span>{{ transaction?.fecha }}</span>
             </div>
             <div class="info-row">
-              <strong>Descripción:</strong>
-              <span>{{ transaction.description }}</span>
+              <strong>Cuenta:</strong>
+              <span>{{
+                transaction?.enviadaPorUsuario
+                  ? transaction?.cuentaDestino
+                  : transaction?.cuentaRemitente
+              }}</span>
             </div>
             <div class="info-row">
               <strong>Monto:</strong>
               <span
-                :class="
-                  transaction.amount >= 0 ? 'text-success' : 'text-danger'
-                "
-                >{{ transaction.amount }}</span
+                :class="{
+                  'text-success': !transaction?.enviadaPorUsuario,
+                  'text-danger': transaction?.enviadaPorUsuario,
+                }"
+              >
+                $
+                {{
+                  transaction?.enviadaPorUsuario
+                    ? transaction?.cantidad
+                    : transaction?.cantidad
+                }}</span
               >
             </div>
           </div>
@@ -115,10 +126,14 @@ h2 {
 }
 
 .text-success {
-  color: green;
+  color: #fff !important;
+  background-color: green;
+  padding: 3px 26px;
 }
 
 .text-danger {
-  color: red;
+  color: #fff !important;
+  background-color: red;
+  padding: 3px 26px;
 }
 </style>
