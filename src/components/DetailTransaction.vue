@@ -127,13 +127,13 @@ h2 {
 
 .text-success {
   color: #fff !important;
-  background-color: green;
+  background-color: #4caf50;
   padding: 3px 26px;
 }
 
 .text-danger {
   color: #fff !important;
-  background-color: red;
+  background-color: #ff695e;
   padding: 3px 26px;
 }
 </style>
