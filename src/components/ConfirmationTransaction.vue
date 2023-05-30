@@ -18,15 +18,15 @@
           <div class="transaction-details">
             <div class="info-row">
               <strong>Cuenta destino:</strong>
-              <span>{{ transaction.cuenta }}</span>
+              <span>{{ transaction.cuentaDestino }}</span>
             </div>
             <div class="info-row">
-              <strong>Descripción:</strong>
-              <span>{{ transaction.description }}</span>
+              <strong>Tipo de cuenta:</strong>
+              <span>{{ transaction.tipo }}</span>
             </div>
             <div class="info-row">
               <strong>Monto:</strong>
-              <span>${{ transaction.amount }}</span>
+              <span>${{ transaction.cantidad }}</span>
             </div>
           </div>
           <p class="current-date">Fecha actual: {{ currentDate }}</p>
