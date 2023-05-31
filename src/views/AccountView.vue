@@ -9,49 +9,9 @@
           <h3 style="text-align: center">Información personal</h3>
           <table class="user-info-table">
             <tbody>
-              <tr>
-                <th>Nombre:</th>
-                <td>{{ userData.nombre }}</td>
-              </tr>
-              <tr>
-                <th>Apellido:</th>
-                <td>{{ userData.apellido }}</td>
-              </tr>
-              <tr>
-                <th>Cédula:</th>
-                <td>{{ userData.cedula }}</td>
-              </tr>
-              <tr>
-                <th>Género:</th>
-                <td>{{ userData.genero }}</td>
-              </tr>
-              <tr>
-                <th>Estado Civil:</th>
-                <td>{{ userData.estadoCivil }}</td>
-              </tr>
-              <tr>
-                <th>Dirección:</th>
-                <td>{{ userData.direccion }}</td>
-              </tr>
-              <tr>
-                <th>Nacionalidad:</th>
-                <td>{{ userData.nacionalidad }}</td>
-              </tr>
-              <tr>
-                <th>Ciudad:</th>
-                <td>{{ userData.ciudad }}</td>
-              </tr>
-              <tr>
-                <th>Estado Laboral:</th>
-                <td>{{ userData.estadoLaboral }}</td>
-              </tr>
-              <tr>
-                <th>Teléfono:</th>
-                <td>{{ userData.telefono }}</td>
-              </tr>
-              <tr>
-                <th>Correo Electrónico:</th>
-                <td>{{ userData.correo }}</td>
+              <tr v-for="field in personalInfoFields" :key="field.label">
+                <th>{{ field.label }}:</th>
+                <td>{{ field.value }}</td>
               </tr>
             </tbody>
           </table>
@@ -79,6 +39,18 @@
           >
             Gestionar transacciones
           </router-link>
+          <div v-if="chartData" className="container-graph">
+            <h3>Gráfico de transacciones enviadas</h3>
+            <line-chart :chart-data="chartData" />
+          </div>
+          <div v-if="chartDataCircle" className="container-graph">
+            <h3>Participación en transacciones</h3>
+            <pie-chart :chart-data="chartDataCircle" />
+          </div>
+          <div v-if="chartDataTotal" className="container-graph">
+            <h3>Total en transacciones</h3>
+            <bar-chart :chart-data="chartDataTotal" />
+          </div>
         </div>
       </div>
     </div>
@@ -87,9 +59,101 @@
 
 <script setup>
 import { useUserStore } from "@/store/userFire.js";
+import LineChart from "@/components/graph/LineChart.vue";
+import PieChart from "@/components/graph/PieChart.vue";
+import BarChart from "@/components/graph/BarChart.vue";
 
 const usuariosS = useUserStore();
 const userData = usuariosS.user;
+
+const personalInfoFields = [
+  { label: "Nombre", value: userData.nombre },
+  { label: "Apellido", value: userData.apellido },
+  { label: "Cédula", value: userData.cedula },
+  { label: "Género", value: userData.genero },
+  { label: "Estado Civil", value: userData.estadoCivil },
+  { label: "Dirección", value: userData.direccion },
+  { label: "Nacionalidad", value: userData.nacionalidad },
+  { label: "Ciudad", value: userData.ciudad },
+  { label: "Estado Laboral", value: userData.estadoLaboral },
+  { label: "Teléfono", value: userData.telefono },
+  { label: "Correo Electrónico", value: userData.correo },
+];
+
+// ------------------- Data grafico de linea
+let chartData = null;
+
+if (Array.isArray(userData.transactions)) {
+  const data = userData.transactions
+    .filter((transaction) => transaction.enviadaPorUsuario)
+    .map((transaction, index) => ({
+      x: "T #" + transaction.id,
+      y: transaction.cantidad,
+    }));
+
+  chartData = {
+    datasets: [
+      {
+        label: "Cantidad ($)",
+        backgroundColor: "#42b983",
+        pointBorderColor: "#fff",
+        data: data,
+      },
+    ],
+  };
+}
+
+// ------------------- Data grafico de pastel
+let chartDataCircle = null;
+
+const transaccionesEnviadas = userData.transactions.filter(
+  (transaction) => transaction.enviadaPorUsuario
+);
+
+const transaccionesRecibidas = userData.transactions.filter(
+  (transaction) => !transaction.enviadaPorUsuario
+);
+
+const totalTransacciones = userData.transactions.length;
+const porcentajeEnviadas =
+  (transaccionesEnviadas.length / totalTransacciones) * 100;
+const porcentajeRecibidas =
+  (transaccionesRecibidas.length / totalTransacciones) * 100;
+
+chartDataCircle = {
+  labels: ["Enviadas (%)", "Recibidas (%)"],
+  datasets: [
+    {
+      data: [porcentajeEnviadas, porcentajeRecibidas],
+      backgroundColor: ["#87c8f3", "#ffe39a"],
+    },
+  ],
+};
+
+// ------------------- Data grafico de barras
+let chartDataTotal = null;
+
+let totalEnviado = 0;
+let totalRecibido = 0;
+
+userData?.transactions.forEach((transaction) => {
+  if (transaction.enviadaPorUsuario) {
+    totalEnviado += transaction.cantidad;
+  } else {
+    totalRecibido += transaction.cantidad;
+  }
+});
+
+chartDataTotal = {
+  labels: ["Enviado ($)", "Recibido ($)"],
+  datasets: [
+    {
+      label: "Total ($)",
+      data: [totalEnviado, totalRecibido],
+      backgroundColor: ["#87c8f3", "#ffe39a"],
+    },
+  ],
+};
 
 function getSaludo() {
   if (userData.genero === "masculino") {
@@ -184,5 +248,12 @@ h1 {
 .info-row span {
   flex: 1;
   margin-left: 10px;
+}
+
+.container-graph {
+  margin-top: 42px;
+  padding: 16px;
+  background: #e1e1e142;
+  border-radius: 12px;
 }
 </style>
